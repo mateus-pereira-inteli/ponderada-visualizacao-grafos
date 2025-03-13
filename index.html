@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mapa com d3 sao paulo</title>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+</head>
+<body>
+    <svg width="800" height="600"></svg>
+
+    <script>
+        var width = 800, height = 600;
+
+        // Define a projeção para converter coordenadas geográficas em coordenadas do SVG
+        var projection = d3.geo.mercator()
+            .scale(60000) // Escala do mapa
+            .center([-46.445898823671556, -23.556594344206978]) // Coordenada do centro do mapa
+
+        var path = d3.geo.path().projection(projection);
+
+        // Carrega o arquivo GeoJSON
+        d3.json("bairros.geojson", function(error, data) { // importa um geojson com delimitacoes de todos os bairros de SP
+            if (error) return console.error(error);
+
+            d3.select("svg").selectAll("path")
+                .data(data.features)
+                .enter().append("path")
+                .attr("d", path)
+                .attr("fill", "#aaaaaa") // cor dentro do mapa
+                .attr("stroke", "#1a1a1a"); // cor bordas do mapa
+        });
+    </script>
+</body>
+</html>
