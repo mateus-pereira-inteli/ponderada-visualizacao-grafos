@@ -6,6 +6,10 @@ Nosso grupo se dividiu em dois trios para o desenvolvimento da atividade, inicia
 
 Nesta ideia cada home base vai ser interligada a um chamado, não conseguimos finalizar o código desta ideia, mas o iniciamos e conseguimos plotar o mapa de São Paulo, até a review de amanhã este código estará finalizado.
 
+<img src="ideia1.jpeg">
+
 ## Ideia 2
 
 Nesta ideia representam novas home bases e o raio de atuação dos gasistas, não conseguimos finalizar o código dessa ideia duante a instrução mas até o review de amanhã este código estará finalizado.
+
+<img src="ideia2.jpeg">
