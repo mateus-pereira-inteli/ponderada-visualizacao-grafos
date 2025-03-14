@@ -20,6 +20,8 @@ Nesta ideia cada home base vai ser interligada a um chamado, não conseguimos fi
 - Gustavo Colombini
 - Pedro Siqueira  
 
+<img src="ideia1.jpeg">
+
 ### O que é e como ajuda no projeto:
 A visualização em grafos conecta HomeBases às demandas no mapa de São Paulo. Conseguimos implementar a plotagem do mapa de São Paulo como base utilizando **d3.js** e iniciamos o código para conectar as bases aos chamados.  
 
@@ -29,9 +31,11 @@ Este sistema vai ajudar nosso projeto de várias formas:
 
 A representação visual com linhas de diferentes cores conectando HomeBases e demandas torna mais intuitivo entender quais bases atendem quais chamados, permitindo ajustes rápidos na distribuição de serviços conforme necessário.
 
+### Resultado
 
-<img src="ideia1.jpeg">
+<img src="resultado1.png">
 
+A imagem acima mostra o resultado gerado pelo código. O mapa de São Paulo é exibido com as HomeBases conectadas aos chamados, proporcionando uma visão clara e intuitiva da distribuição e conectividade entre eles.
 
 ## Ideia 2 - Visualização da cobertura das HomeBases
 
