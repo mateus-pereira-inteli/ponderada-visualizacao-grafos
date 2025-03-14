@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ideia 2</title>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            text-align: center;
+        }
+        
+        svg {
+            background-color: #fff;
+            border-radius: 5px;
+        }
+        
+        .district {
+            transition: fill 0.3s;
+        }
+        
+        .base-point {
+            cursor: pointer;
+        }
+        
+        .radius-circle {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        
+        .tooltip {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <svg width="800" height="600"></svg>
+        <div class="tooltip"></div>
+    </div>
+
+    <script>
+        var width = 800, height = 600;
+
+        // Define a projeção para converter coordenadas geográficas em coordenadas do SVG
+        var projection = d3.geo.mercator()
+            .scale(60000)
+            .center([-46.445898823671556, -23.556594344206978])
+
+        var path = d3.geo.path().projection(projection);
+
+        // Define uma escala de cores
+        var colorScale = d3.scale.category20();
+        
+        // Função para calcular cor por nome do distrito
+        function getDistrictColor(district) {
+            return colorScale(district.properties.ds_nome);
+        }
+
+        // Tooltip setup
+        var tooltip = d3.select(".tooltip");
+        
+        // Definição das Home Bases (longitude, latitude)
+        var homeBases = [
+            { name: "Home Base 1", color: "#FF5733", coords: [-46.633308, -23.550520], radius: 5000 },  // Região da Av. Paulista
+            { name: "Home Base 2", color: "#33A8FF", coords: [-46.477173, -23.527064], radius: 5000 },  // Região de Itaquera
+            { name: "Home Base 3", color: "#33FF57", coords: [-46.723432, -23.562912], radius: 5000 },   // Região da USP
+            { name: "Home Base 4", color: "#9933FF", coords: [-46.622456, -23.648202], radius: 5000 }   // Região Sul (Santo Amaro)
+        ];
+
+        // Carrega o arquivo GeoJSON
+        d3.json("bairros.geojson", function(error, data) {
+            if (error) return console.error(error);
+
+            var svg = d3.select("svg");
+
+            // Desenha os distritos
+            svg.selectAll("path")
+                .data(data.features)
+                .enter().append("path")
+                .attr("d", path)
+                .attr("class", "district")
+                .attr("fill", function(d) { 
+                    return getDistrictColor(d);
+                })
+                .attr("fill-opacity", 0.6)
+                .attr("stroke", "#1a1a1a")
+                .attr("stroke-width", 0.5)
+                .append("title")
+                .text(function(d) { return d.properties.ds_nome; });
+
+            // Adiciona os círculos de raio para cada Home Base
+            homeBases.forEach(function(base) {
+                var point = projection(base.coords);
+                
+                svg.append("circle")
+                   .attr("class", "radius-circle")
+                   .attr("cx", point[0])
+                   .attr("cy", point[1])
+                   .attr("r", base.radius / 100)
+                   .attr("fill", base.color);
+                   
+                // Adiciona o ponto central da Home Base
+                svg.append("circle")
+                   .attr("class", "base-point")
+                   .attr("cx", point[0])
+                   .attr("cy", point[1])
+                   .attr("r", 6)
+                   .attr("fill", base.color)
+                   .attr("stroke", "#fff")
+                   .attr("stroke-width", 2)
+                   .on("mouseover", function() {
+                       tooltip.html(base.name)
+                           .style("left", (d3.event.pageX + 10) + "px")
+                           .style("top", (d3.event.pageY - 30) + "px")
+                           .style("opacity", 1);
+                   })
+                   .on("mouseout", function() {
+                       tooltip.style("opacity", 0);
+                   });
+            });
+        });
+    </script>
+</body>
+</html>
