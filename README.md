@@ -15,7 +15,7 @@ Os códigos foram desenvolvidos utilizando a lib D3.js em html, necessitando rod
 
 Nesta ideia cada home base vai ser interligada a um chamado, não conseguimos finalizar o código desta ideia, mas o iniciamos e conseguimos plotar o mapa de São Paulo, até a review de amanhã este código estará finalizado.
 
-### Grupo:
+### Trio:
 - Guilherme Carvalho  
 - Gustavo Colombini
 - Pedro Siqueira  
@@ -32,13 +32,34 @@ A representação visual com linhas de diferentes cores conectando HomeBases e d
 
 <img src="ideia1.jpeg">
 
-## Ideia 2
 
-Nesta ideia representam novas home bases e o raio de atuação dos gasistas, não conseguimos finalizar o código dessa ideia duante a instrução mas até o review de amanhã este código estará finalizado.
+## Ideia 2 - Visualização da cobertura das HomeBases
 
-### Grupo:
-- Eduardo Fidelis 
+Nesta ideia, usamos D3.js para mostrar no mapa onde estão as home bases e até onde os gasistas conseguem atender. O código carrega um arquivo GeoJSON com os distritos de São Paulo e adiciona pontos que representam as bases, destacando seu alcance.
+
+### Trio:
+
+- Eduardo Fidelis
 - Larissa Martins
-- Mateus Beppler 
+- Mateus Beppler
 
 <img src="ideia2.jpeg">
+
+### O que é e como ajuda no projeto:
+
+Essa visualização é importante para entender se os gasistas estão bem distribuídos pela cidade. Com os distritos e os círculos mostrando o raio de cada home base, conseguimos:
+
+1. **Identificar áreas sem cobertura:** Se houver regiões sem círculos, significa que esses locais podem estar sem atendimento.
+
+2. **Evitar sobrecarga em algumas áreas:** Se os círculos estiverem muito em cima uns dos outros, pode ser que alguns lugares tenham mais equipes do que precisam, enquanto outros ficam sem suporte.
+
+3. **Melhorar o planejamento das rotas:** Com a visão geral das home bases e seus alcances, fica mais fácil organizar os deslocamentos dos gasistas, economizando tempo e recursos.
+
+4. **Ajudar na tomada de decisões:** Com tudo bem visualizado, podemos decidir melhor onde colocar novas bases ou como distribuir melhor as equipes.
+
+### Resultado
+
+<img src="resultado2.png">
+
+A imagem acima mostra o resultado gerado pelo código. Os distritos de São Paulo são representados no mapa, e cada home base é destacada com um círculo que indica seu raio de atuação. Essa abordagem ajuda a visualizar melhor a cobertura das homebases na cidade. 
+
