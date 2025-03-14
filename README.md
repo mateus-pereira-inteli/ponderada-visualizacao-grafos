@@ -17,7 +17,7 @@ Nesta ideia cada home base vai ser interligada a um chamado, não conseguimos fi
 
 ### Grupo:
 - Guilherme Carvalho  
-- Mateus Beppler  
+- Gustavo Colombini
 - Pedro Siqueira  
 
 ### O que é e como ajuda no projeto:
@@ -35,5 +35,10 @@ A representação visual com linhas de diferentes cores conectando HomeBases e d
 ## Ideia 2
 
 Nesta ideia representam novas home bases e o raio de atuação dos gasistas, não conseguimos finalizar o código dessa ideia duante a instrução mas até o review de amanhã este código estará finalizado.
+
+### Grupo:
+- Eduardo Fidelis 
+- Larissa Martins
+- Mateus Beppler 
 
 <img src="ideia2.jpeg">
