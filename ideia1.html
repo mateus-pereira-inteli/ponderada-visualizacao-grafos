@@ -1,35 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>mapa com d3 sao paulo</title>
-    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mapa com D3 São Paulo</title>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <style>
+        .map path { fill: #aaaaaa; stroke: #1a1a1a; } /* Mapa */
+        .line { stroke: black; stroke-width: 2px; }  /* Linhas */
+        .point { fill: blue; } /* Pontos normais */
+        .center-point { fill: red; } /* Ponto central */
+    </style>
 </head>
 <body>
     <svg width="800" height="600"></svg>
 
     <script>
         var width = 800, height = 600;
+        var svg = d3.select("svg");
 
-        // Define a projeção para converter coordenadas geográficas em coordenadas do SVG
+        // Define a projeção geográfica
         var projection = d3.geo.mercator()
-            .scale(60000) // Escala do mapa
-            .center([-46.445898823671556, -23.556594344206978]) // Coordenada do centro do mapa
+            .scale(60000)
+            .center([-46.445898823671556, -23.556594344206978]) 
+            .translate([width / 2, height / 2]);
 
         var path = d3.geo.path().projection(projection);
 
-        // Carrega o arquivo GeoJSON
-        d3.json("bairros.geojson", function(error, data) { // importa um geojson com delimitacoes de todos os bairros de SP
+        // Grupo do mapa (mantém o mapa no fundo)
+        var mapGroup = svg.append("g").attr("class", "map");
+
+        // Grupo para as linhas e pontos (mantém na frente)
+        var pointsGroup = svg.append("g").attr("class", "points");
+
+        // Carrega o arquivo GeoJSON dos bairros de SP
+        d3.json("bairros.geojson", function (error, data) {
             if (error) return console.error(error);
 
-            d3.select("svg").selectAll("path")
+            // Adiciona o mapa primeiro (fica atrás dos pontos)
+            mapGroup.selectAll("path")
                 .data(data.features)
-                .enter().append("path")
-                .attr("d", path)
-                .attr("fill", "#aaaaaa") // cor dentro do mapa
-                .attr("stroke", "#1a1a1a"); // cor bordas do mapa
+                .enter()
+                .append("path")
+                .attr("d", path);
         });
+
+        // Coordenadas geográficas dos 4 pontos
+        const points = [
+            { lon: -46.6333, lat: -23.5505 },
+            { lon: -46.62, lat: -23.55 },
+            { lon: -46.62, lat: -23.56 },
+            { lon: -46.65, lat: -23.54 }
+        ];
+
+        // Coordenadas do ponto central
+        const centerGeo = { lon: -46.645, lat: -23.555 };
+        const center = projection([centerGeo.lon, centerGeo.lat]);
+
+        // Adiciona as linhas conectando o ponto central aos outros pontos
+        pointsGroup.selectAll("line")
+            .data(points)
+            .enter()
+            .append("line")
+            .attr("x1", center[0])
+            .attr("y1", center[1])
+            .attr("x2", d => projection([d.lon, d.lat])[0])
+            .attr("y2", d => projection([d.lon, d.lat])[1])
+            .attr("class", "line");
+
+        // Adiciona os 4 pontos normais
+        pointsGroup.selectAll(".point")
+            .data(points)
+            .enter()
+            .append("circle")
+            .attr("cx", d => projection([d.lon, d.lat])[0])
+            .attr("cy", d => projection([d.lon, d.lat])[1])
+            .attr("r", 6)
+            .attr("class", "point");
+
+        // Adiciona o ponto central (vermelho)
+        pointsGroup.append("circle")
+            .attr("cx", center[0])
+            .attr("cy", center[1])
+            .attr("r", 8)
+            .attr("class", "center-point");
     </script>
 </body>
 </html>
