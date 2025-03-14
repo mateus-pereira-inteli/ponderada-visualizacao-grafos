@@ -2,6 +2,20 @@
 
 Nosso grupo se dividiu em dois trios para o desenvolvimento da atividade, inicialmente realizamos uma rodada de apresentação de ideias para definirmos quais representações gráficas de grafos iriamos utilizar para realizar a demonstração para o parceiro nesta review.
 
+## Execução dos mapas
+
+Os códigos foram desenvolvidos utilizando a lib D3.js em html, necessitando rodar os arquivos em um serviço, pois o d3.js, necessita da utilização do ```fecth```, acabando por bloquear via politica de CORS, requsições diretas quando você abre o arquivo diretamente na máquina sem um serviço, dessa forma não conseguindo carregar o arquivo geoJson, para rodar via serviço segue o passo a passo abaixo:
+
+### Execução no codespaces
+1. Abrir o repositório no codespaces
+2. Navegar até a seção de extenções e intalar a extensão: "Live Server"
+3. Após instalar a extensão você deve abrir o arquivo e Abrir utilizando o Live Server
+
+### Execução local
+1. Clonar o repositório
+2. Navegar até a seção de extenções e intalar a extensão: "Live Server"
+3. Após instalar a extensão você deve abrir o arquivo e Abrir utilizando o Live Server
+
 ## Ideia 1 - Sistema de Visualização em Grafos de HomeBases para Chamados
 
 Nesta ideia cada home base vai ser interligada a um chamado, não conseguimos finalizar o código desta ideia, mas o iniciamos e conseguimos plotar o mapa de São Paulo, até a review de amanhã este código estará finalizado.
