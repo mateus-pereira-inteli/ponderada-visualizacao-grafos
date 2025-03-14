@@ -4,46 +4,39 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mapa com D3 São Paulo</title>
-    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
     <style>
-        .map path { fill: #aaaaaa; stroke: #1a1a1a; } /* Mapa */
-        .line { stroke: black; stroke-width: 2px; }  /* Linhas */
+        .map { fill: #aaaaaa; stroke: #727272; } /* Mapa */
+        .line { stroke: black; }  /* Linhas */
         .point { fill: blue; } /* Pontos normais */
         .center-point { fill: red; } /* Ponto central */
     </style>
 </head>
 <body>
-    <svg width="800" height="600"></svg>
+    <map width="800" height="600"></map>
 
     <script>
         var width = 800, height = 600;
-        var svg = d3.select("svg");
+        const sensitivity = 1;
+
+        let svg = d3.select("map")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
 
         // Define a projeção geográfica
-        var projection = d3.geo.mercator()
+        var projection = d3.geoMercator()
             .scale(60000)
             .center([-46.445898823671556, -23.556594344206978]) 
             .translate([width / 2, height / 2]);
 
-        var path = d3.geo.path().projection(projection);
+        var path = d3.geoPath().projection(projection);
 
-        // Grupo do mapa (mantém o mapa no fundo)
-        var mapGroup = svg.append("g").attr("class", "map");
+        // grupo do mapa e marcadores
+        let mapGroup = svg.append("g");
 
-        // Grupo para as linhas e pontos (mantém na frente)
-        var pointsGroup = svg.append("g").attr("class", "points");
-
-        // Carrega o arquivo GeoJSON dos bairros de SP
-        d3.json("bairros.geojson", function (error, data) {
-            if (error) return console.error(error);
-
-            // Adiciona o mapa primeiro (fica atrás dos pontos)
-            mapGroup.selectAll("path")
-                .data(data.features)
-                .enter()
-                .append("path")
-                .attr("d", path);
-        });
+        // Estado inicial do zoom e translação
+        let currentTransform = d3.zoomIdentity;
 
         // Coordenadas geográficas dos 4 pontos
         const points = [
@@ -55,35 +48,68 @@
 
         // Coordenadas do ponto central
         const centerGeo = { lon: -46.645, lat: -23.555 };
-        const center = projection([centerGeo.lon, centerGeo.lat]);
 
-        // Adiciona as linhas conectando o ponto central aos outros pontos
-        pointsGroup.selectAll("line")
-            .data(points)
-            .enter()
-            .append("line")
-            .attr("x1", center[0])
-            .attr("y1", center[1])
-            .attr("x2", d => projection([d.lon, d.lat])[0])
-            .attr("y2", d => projection([d.lon, d.lat])[1])
-            .attr("class", "line");
+        // Carrega o arquivo GeoJSON dos bairros de SP
+        d3.json("bairros.geojson").then(function(data) {
+            // Desenha o mapa primeiro
+            mapGroup.selectAll("path")
+                .data(data.features)
+                .enter()
+                .append("path")
+                .attr("d", path)
+                .attr("class", "map");
 
-        // Adiciona os 4 pontos normais
-        pointsGroup.selectAll(".point")
-            .data(points)
-            .enter()
-            .append("circle")
-            .attr("cx", d => projection([d.lon, d.lat])[0])
-            .attr("cy", d => projection([d.lon, d.lat])[1])
-            .attr("r", 6)
-            .attr("class", "point");
+            const raioMarcadores = 8;
+            const grossuraLinhas = 4;
 
-        // Adiciona o ponto central (vermelho)
-        pointsGroup.append("circle")
-            .attr("cx", center[0])
-            .attr("cy", center[1])
-            .attr("r", 8)
-            .attr("class", "center-point");
+            let linhas = mapGroup.selectAll("line")
+                .data(points)
+                .enter()
+                .append("line")
+                .attr("x1", projection([centerGeo.lon, centerGeo.lat])[0])
+                .attr("y1", projection([centerGeo.lon, centerGeo.lat])[1])
+                .attr("x2", d => projection([d.lon, d.lat])[0])
+                .attr("y2", d => projection([d.lon, d.lat])[1])
+                .attr("stroke-width", grossuraLinhas)
+                .attr("class", "line");
+
+            let marcadores = mapGroup.selectAll("circle")
+                .data(points)
+                .enter()
+                .append("circle")
+                .attr("cx", d => projection([d.lon, d.lat])[0])
+                .attr("cy", d => projection([d.lon, d.lat])[1])
+                .attr("r", raioMarcadores)
+                .attr("stroke", "black")
+                .attr("stroke-width", grossuraLinhas)
+                .attr("class", "point");
+
+            let marcadorCentral = mapGroup.append("circle")
+                .attr("cx", projection([centerGeo.lon, centerGeo.lat])[0])
+                .attr("cy", projection([centerGeo.lon, centerGeo.lat])[1])
+                .attr("r", raioMarcadores)
+                .attr("stroke", "black")
+                .attr("stroke-width", grossuraLinhas)
+                .attr("class", "center-point");
+
+            // Função de zoom e drag
+            let zoom = d3.zoom()
+                .scaleExtent([0.1, 10]) // Limites do zoom
+                .on("zoom", (event) => {
+                    currentTransform = event.transform;
+                    mapGroup.attr("transform", event.transform);
+
+                    // Ajusta o tamanho dos círculos dinamicamente
+                    marcadores.attr("r", raioMarcadores / event.transform.k);
+                    marcadores.attr("stroke-width", grossuraLinhas / event.transform.k);
+                    marcadorCentral.attr("r", raioMarcadores / event.transform.k);
+                    marcadorCentral.attr("stroke-width", grossuraLinhas / event.transform.k);
+                    linhas.attr("stroke-width", grossuraLinhas / event.transform.k);
+                });
+
+            // Aplica o zoom ao SVG
+            svg.call(zoom);
+        })
     </script>
 </body>
 </html>
