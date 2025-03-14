@@ -13,8 +13,9 @@ Os códigos foram desenvolvidos utilizando a lib D3.js em html, necessitando rod
 
 ### Execução local
 1. Clonar o repositório
-2. Navegar até a seção de extenções e intalar a extensão: "Live Server"
-3. Após instalar a extensão você deve abrir o arquivo e Abrir utilizando o Live Server
+2. Abrir o repositório clonado na IDE Visual Studio Code
+3. Navegar até a seção de extenções e intalar a extensão: "Live Server"
+4. Após instalar a extensão você deve abrir o arquivo e Abrir utilizando o Live Server
 
 ## Ideia 1 - Sistema de Visualização em Grafos de HomeBases para Chamados
 
